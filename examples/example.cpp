@@ -29,7 +29,7 @@ int main() {
        <<  result.price << " delta " << result.delta << " gamma " << result.gamma << endl
        << endl;
 
-  result = PriceByQuantLib(execType, optionType, S0, R, sigma, N, T, K);
+  result = PriceVanillaByQuantLib(execType, optionType, S0, R, sigma, N, T, K);
   cout << exec_type << " " << option_type << " option price by QuantLib = "
        <<  result.price << " delta " << result.delta << " gamma " << result.gamma << endl
        << endl;
@@ -62,6 +62,12 @@ int main() {
   cout << exec_type << " Digital " << option_type << " option price by CRR= "
        << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
        << endl;
+
+  result = PriceBinaryByQuantLib(execType, optionType, S0, R, sigma,N, T, K);
+  cout << exec_type << " Digital " << option_type << " option price by QuantLib= "
+       << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
+       << endl;
+
   cout << exec_type << " Digital " << option_type << " option price by Analytical = "
        << PriceByAnalytical(execType, optionType, S0, R, sigma,N, T, K, optionType == OptionType::Call?DigitalCallPayoff : DigitalPutPayoff) << endl
        << endl;

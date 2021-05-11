@@ -36,7 +36,7 @@ int GetInputData(int &N, double &K) {
 }
 
 // pricing European option
-Result PriceByCRR(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, double (*Payoff)(double z, double K)) {
+Result PriceByCRR(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
   double dt = T / N;
   double U = exp(sigma * sqrt(dt));
   //D = 1/U
