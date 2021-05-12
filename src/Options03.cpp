@@ -36,7 +36,7 @@ int GetInputData(int &N, double &K) {
 }
 
 // pricing European option
-Result PriceByCRR(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
+Result PriceByCRR(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
   double dt = T / N;
   double U = exp(sigma * sqrt(dt));
   //D = 1/U
@@ -101,7 +101,7 @@ double NodeValue(int i, int N, double q) {
   // return BinomialCoeff(i, N) * pow(q, i) * pow(1.0 - q, (N - i));
 }
 
-double PriceByAnalytical(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, double (*Payoff)(double z, double K)) {
+double PriceByAnalytical(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
   double dt = T / N;
   double U = exp(sigma * sqrt(dt));
   //D = 1/U
@@ -116,15 +116,20 @@ double PriceByAnalytical(ExerciseType execType, OptionType optionType, double S0
     NV.push_back(nv);
     total += nv * Price;
   }
-  std::ofstream fout;
-  fout.open("density_plot.txt");
-  fout.precision(10);
-  copy(NV.begin(), NV.end(), std::ostream_iterator<double>(fout, "\n"));
-  fout.close();
+
+  if (payoffType == PayoffType::Vanilla){
+    std::ofstream fout;
+    fout.open("density_plot.csv");
+    fout << "nodevalues\n";
+    fout.precision(10);
+    copy(NV.begin(), NV.end(), std::ostream_iterator<double>(fout, "\n"));
+    fout.close();
+  }
+
   return total / exp(R * T);
 }
 
-double PriceByBS(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, double (*Payoff)(double z, double K)) {
+double PriceByBS(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
   double dt = T / N;
   double U = exp(((R - (pow(sigma, 2) / 2)) * dt) + (sigma * sqrt(dt))) - 1.0;
   //D = 1/U

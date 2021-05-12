@@ -10,13 +10,13 @@ int GetInputData(int &N, double &K);
 
 // pricing European option
 //Result PriceByCRR(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, double (*Payoff)(double z, double K));
-Result PriceByCRR(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff);
+Result PriceByCRR(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff);
 
 // pricing by analytical formula
-double PriceByAnalytical(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, double (*Payoff)(double z, double K));
+double PriceByAnalytical(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff);
 
 // pricing by black-scholes
-double PriceByBS(ExerciseType execType, OptionType optionType, double S0, double R, double sigma, int N, double T, double K, double (*Payoff)(double z, double K));
+double PriceByBS(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff);
 
 // computing callpayoff
 double CallPayoff(double z, double K);

@@ -12,7 +12,8 @@ int main() {
   int N;
   ExerciseType execType;
   OptionType optionType;
-  if (GetInputData2(execType, optionType, S0, K, T, N, sigma, R) == 1) return 1;
+  PayoffType payoffType;
+  if (GetInputData2(execType, optionType, payoffType,S0, K, T, N, sigma, R) == 1) return 1;
   string exec_type, option_type;
 
   if (execType == ExerciseType::European){
@@ -23,57 +24,52 @@ int main() {
     option_type = "Call";
   } else option_type = "Put";
 
+  if (payoffType == PayoffType::Vanilla) {
+    Result result = PriceByCRR(execType, optionType, payoffType, S0, R, sigma, N, T, K, optionType == OptionType::Call ? CallPayoff : PutPayoff);
+    cout << exec_type << " " << option_type << " option price by CRR = "
+         << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
+         << endl;
 
-  Result result = PriceByCRR(execType, optionType, S0, R, sigma, N, T, K, optionType == OptionType::Call?CallPayoff : PutPayoff);
-  cout << exec_type << " " << option_type << " option price by CRR = "
-       <<  result.price << " delta " << result.delta << " gamma " << result.gamma << endl
-       << endl;
+    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N, T, K);
+    cout << exec_type << " " << option_type << " option price by QuantLib = "
+         << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
+         << endl;
 
-  result = PriceVanillaByQuantLib(execType, optionType, S0, R, sigma, N, T, K);
-  cout << exec_type << " " << option_type << " option price by QuantLib = "
-       <<  result.price << " delta " << result.delta << " gamma " << result.gamma << endl
-       << endl;
+    if (execType == ExerciseType::American) {
+      cout << "I do not know how to handle American type with Analytical solution\n" << endl;
+    } else {
+      cout << exec_type << " " << option_type << " option price by Analytical = "
+           << PriceByAnalytical(execType, optionType, payoffType, S0, R, sigma, N, T, K, optionType == OptionType::Call ? CallPayoff : PutPayoff) << endl
+           << endl;
+    }
 
-  if (execType == ExerciseType::American){
-    cout << "I do not know how to handle American type with Analytical solution\n" << endl;
-  } else {
-    cout << exec_type << " " << option_type << " option price by Analytical = "
-         << PriceByAnalytical(execType, optionType, S0, R, sigma, N, T, K, optionType == OptionType::Call?CallPayoff : PutPayoff) << endl
+    cout << exec_type << " " << option_type << " option price by Black-Scholes = "
+         << PriceByBS(execType, optionType, payoffType, S0, R, sigma, N, T, K, optionType == OptionType::Call ? CallPayoff : PutPayoff) << endl
+         << endl;
+
+  } else if (payoffType == PayoffType::Digital) {
+
+    Result result = PriceByCRR(execType, optionType, payoffType, S0, R, sigma, N, T, K, optionType == OptionType::Call ? DigitalCallPayoff : DigitalPutPayoff);
+    cout << exec_type << " Digital " << option_type << " option price by CRR = "
+         << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
+         << endl;
+
+    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N, T, K);
+    cout << exec_type << " Digital " << option_type << " option price by QuantLib = "
+         << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
+         << endl;
+
+    if (execType == ExerciseType::American) {
+      cout << "I do not know how to handle American type with Analytical solution\n" << endl;
+    } else {
+      cout << exec_type << " Digital " << option_type << " option price by Analytical = "
+           << PriceByAnalytical(execType, optionType, payoffType, S0, R, sigma, N, T, K, optionType == OptionType::Call ? DigitalCallPayoff : DigitalPutPayoff) << endl
+           << endl;
+    }
+    cout << exec_type << " Digital " << option_type << " option price by Black-Scholes = "
+         << PriceByBS(execType, optionType, payoffType, S0, R, sigma, N, T, K, optionType == OptionType::Call ? DigitalCallPayoff : DigitalPutPayoff) << endl
          << endl;
   }
-
-  cout << exec_type << " " << option_type << " option price by Black-Scholes = "
-       << PriceByBS(execType, optionType, S0, R, sigma, N, T, K, optionType == OptionType::Call?CallPayoff : PutPayoff) << endl
-       << endl;
-
-
-  /*cout << " European put option price by CRR = "
-       << PriceByCRR(optionType, S0, R, sigma,N, T, K, PutPayoff) << endl
-       << endl;
-  cout << " European put option price by Analytical = "
-       << PriceByAnalytical(optionType, S0, R, sigma,N, T, K, PutPayoff) << endl
-       << endl;
-  cout << " European put option price by Black-Scholes = "
-       << PriceByBS(optionType, S0, R, sigma,N, T, K, PutPayoff) << endl
-       << endl;*/
-
-
-  result = PriceByCRR(execType, optionType, S0, R, sigma,N, T, K, optionType == OptionType::Call?DigitalCallPayoff : DigitalPutPayoff);
-  cout << exec_type << " Digital " << option_type << " option price by CRR= "
-       << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
-       << endl;
-
-  result = PriceBinaryByQuantLib(execType, optionType, S0, R, sigma,N, T, K);
-  cout << exec_type << " Digital " << option_type << " option price by QuantLib= "
-       << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
-       << endl;
-
-  cout << exec_type << " Digital " << option_type << " option price by Analytical = "
-       << PriceByAnalytical(execType, optionType, S0, R, sigma,N, T, K, optionType == OptionType::Call?DigitalCallPayoff : DigitalPutPayoff) << endl
-       << endl;
-  cout << exec_type << " Digital " << option_type << " option price by Black-Scholes = "
-       << PriceByBS(execType, optionType, S0, R, sigma,N, T, K, optionType == OptionType::Call?DigitalCallPayoff : DigitalPutPayoff) << endl
-       << endl;
 
 
 

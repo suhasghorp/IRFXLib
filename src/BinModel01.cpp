@@ -20,14 +20,17 @@ double S_BS(double S0, double U, double D, int n, int i){
   return S0 * pow(1 + U, i) * pow(1 + D, n - i);
 }
 
-int GetInputData2(ExerciseType& execType, OptionType& optionType, double &S0, double &K, double &T, int &N, double &sigma, double &R){
-  string exec, opt;
+int GetInputData2(ExerciseType& execType, OptionType& optionType, PayoffType& payoffType, double &S0, double &K, double &T, int &N, double &sigma, double &R){
+  string exec, opt, payoff;
 
   cout << "Enter Exercise Type (e.g. A or E): ";
   cin >> exec;
 
   cout << "Enter Option Type (e.g. call or put): ";
   cin >> opt;
+
+  cout << "Enter Payoff Type (e.g. V or D): ";
+  cin >> payoff;
 
   cout << "Enter Spot: ";
   cin >> S0;
@@ -45,6 +48,7 @@ int GetInputData2(ExerciseType& execType, OptionType& optionType, double &S0, do
 
   execType = (exec == "A") ? (ExerciseType::American) : (ExerciseType::European);
   optionType = (opt == "call") ? (OptionType::Call) : (OptionType::Put);
+  payoffType = (payoff == "V") ? (PayoffType::Vanilla) : (PayoffType::Digital);
 
   if (S0 <= 0 || K <= 0 || T <= 0 || N <= 0 || sigma <= 0 || R <= 0){
     cout << "Invalid data" << endl;
