@@ -1,16 +1,8 @@
 #ifndef BinModel01_h
 #define BinModel01_h
 
+#include <IRFXLib/utils.h>
 namespace lecture1 {
-
-//American or European
-enum class ExerciseType { American, European};
-
-enum class OptionType { Call, Put};
-
-enum PayoffType { Vanilla, Digital};
-
-struct Result { double price; double delta; double gamma ;};
 
 // computing risk neutral probability
 double RiskNeutProb(double U, double D, double R);
