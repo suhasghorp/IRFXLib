@@ -20,7 +20,9 @@ double S_BS(double S0, double U, double D, int n, int i){
   return S0 * pow(1 + U, i) * pow(1 + D, n - i);
 }
 
-int GetInputData2(ExerciseType& execType, OptionType& optionType, PayoffType& payoffType, double &S0, double &K, double &T, int &N, double &sigma, double &R){
+int GetInputData2(ExerciseType &execType, OptionType &optionType,
+                  PayoffType &payoffType, double &S0, double &K, double &K2,
+                  double &T, int &N, double &sigma, double &R) {
   string exec, opt, payoff;
 
   cout << "Enter Exercise Type (e.g. A or E): ";
@@ -29,13 +31,17 @@ int GetInputData2(ExerciseType& execType, OptionType& optionType, PayoffType& pa
   cout << "Enter Option Type (e.g. call or put): ";
   cin >> opt;
 
-  cout << "Enter Payoff Type (e.g. V or D): ";
+  cout << "Enter Payoff Type (e.g. V or D or DD): ";
   cin >> payoff;
 
   cout << "Enter Spot: ";
   cin >> S0;
   cout << "Enter Strike: ";
   cin >> K;
+  if (payoff == "DD") {
+    cout << "Enter Second Strike: ";
+    cin >> K2;
+  }
   cout << "Enter Time to Maturity in years: ";
   cin >> T;
   cout << "Enter Number of Steps: ";
@@ -48,7 +54,9 @@ int GetInputData2(ExerciseType& execType, OptionType& optionType, PayoffType& pa
 
   execType = (exec == "A") ? (ExerciseType::American) : (ExerciseType::European);
   optionType = (opt == "call") ? (OptionType::Call) : (OptionType::Put);
-  payoffType = (payoff == "V") ? (PayoffType::Vanilla) : (PayoffType::Digital);
+  payoffType = (payoff == "V") ? (PayoffType::Vanilla)
+                               : (payoff == "D") ? (PayoffType::Digital)
+                                                 : (PayoffType::DDigital);
 
   if (S0 <= 0 || K <= 0 || T <= 0 || N <= 0 || sigma <= 0 || R <= 0){
     cout << "Invalid data" << endl;

@@ -2,7 +2,7 @@
 file(GLOB HEADERS CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/include/IRFXLib/*.h")
 
 # Make a static library (tradeoff of memory for better performance)
-add_library(IRFXLib STATIC "BinModel01.cpp" Options03.cpp "BinModel02.cpp" Option06.cpp ${HEADERS})
+add_library(IRFXLib STATIC "BinModel01.cpp" Options03.cpp "BinModel02.cpp" Option06.cpp DoubleDigitalPayoff.cpp ${HEADERS})
 
 # Add an alias so the target can be used while building
 add_library(IRFXLib::IRFXLib ALIAS IRFXLib)

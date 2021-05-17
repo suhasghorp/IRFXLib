@@ -8,12 +8,14 @@ using namespace lecture1;
 
 
 int main() {
-  double S0, K, T, sigma, R;
+  double S0, K, K2, T, sigma, R;
   int N;
   ExerciseType execType;
   OptionType optionType;
   PayoffType payoffType;
-  if (GetInputData2(execType, optionType, payoffType,S0, K, T, N, sigma, R) == 1) return 1;
+  if (GetInputData2(execType, optionType, payoffType, S0, K, K2, T, N, sigma,
+                    R) == 1)
+    return 1;
   string exec_type, option_type;
 
   if (execType == ExerciseType::European){
@@ -30,9 +32,11 @@ int main() {
          << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
          << endl;
 
-    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N, T, K);
-    cout << exec_type << " " << option_type << " option price by QuantLib = "
-         << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
+    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N,
+                             T, K, K2);
+    cout << exec_type << " " << option_type
+         << " option price by QuantLib = " << result.price << " delta "
+         << result.delta << " gamma " << result.gamma << endl
          << endl;
 
     if (execType == ExerciseType::American) {
@@ -54,9 +58,11 @@ int main() {
          << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
          << endl;
 
-    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N, T, K);
-    cout << exec_type << " Digital " << option_type << " option price by QuantLib = "
-         << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
+    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N,
+                             T, K, K2);
+    cout << exec_type << " Digital " << option_type
+         << " option price by QuantLib = " << result.price << " delta "
+         << result.delta << " gamma " << result.gamma << endl
          << endl;
 
     if (execType == ExerciseType::American) {

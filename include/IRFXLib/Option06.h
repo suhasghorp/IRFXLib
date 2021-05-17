@@ -16,7 +16,7 @@ namespace lecture2 {
     void SetN(int N_) { N = N_; }
     virtual double Payoff (double z) { return 0.0;}
     double PriceByCRR(BinModel Model);
-
+    int GetN() { return N; }
   };
 
 
@@ -40,12 +40,17 @@ class Put: public EurOption {
     virtual double Payoff ( double z ) ;
   };
 
-class DoubleDigital: public EurOption { ;
- private:
-  double K1, K2;
- public:
-  int GetInputData ( ) ;
-  virtual double Payoff ( double z ) ;
-};
+  class DoubleDigital : public EurOption {
+    ;
+
+  private:
+    double K1, K2;
+
+  public:
+    int GetInputData();
+    virtual double Payoff(double z);
+    double GetK1() const;
+    double GetK2() const;
+  };
 }
 #endif //IRFXLIB_INCLUDE_IRFXLIB_OPTION06_H_

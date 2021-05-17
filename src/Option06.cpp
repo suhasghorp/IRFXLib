@@ -1,11 +1,10 @@
-#include <IRFXLib/Option06.h>
 #include <IRFXLib/BinModel02.h>
-#include <iostream>
+#include <IRFXLib/Option06.h>
 #include <cmath>
+#include <iostream>
 
 using namespace std;
 using namespace lecture2;
-
 
 double EurOption::PriceByCRR(BinModel Model) {
 
@@ -16,15 +15,17 @@ double EurOption::PriceByCRR(BinModel Model) {
   }
   for (int n = N - 1; n >= 0; n--) {
     for (int i = 0; i <= n; i++) {
-      Price[i] = (q * Price[i + 1] + (1 - q) * Price[i]) * exp(-Model.GetR() * Model.getDt());
+      Price[i] = (q * Price[i + 1] + (1 - q) * Price[i]) *
+                 exp(-Model.GetR() * Model.getDt());
     }
   }
   return Price[0];
 }
 
 double Call::Payoff(double z) {
-  if ( z > K) return z - K;
-  return 0.0 ;
+  if (z > K)
+    return z - K;
+  return 0.0;
 }
 
 int Call::GetInputData() {
@@ -39,8 +40,9 @@ int Call::GetInputData() {
   return 0;
 }
 
-double Put::Payoff ( double z) {
-  if (z < K) return K - z;
+double Put::Payoff(double z) {
+  if (z < K)
+    return K - z;
   return 0.0;
 }
 
@@ -56,10 +58,14 @@ int Put::GetInputData() {
   return 0;
 }
 
-double DoubleDigital::Payoff ( double z) {
-  if (K1 < z && z < K2) return 1.0;
+double DoubleDigital::Payoff(double z) {
+  if (K1 <= z && z <= K2)
+    return 1.0;
   return 0.0;
 }
+
+double DoubleDigital::GetK1() const { return K1; }
+double DoubleDigital::GetK2() const { return K2; }
 
 int DoubleDigital::GetInputData() {
   cout << " Enter Double Digital Option data : " << endl;
@@ -74,4 +80,3 @@ int DoubleDigital::GetInputData() {
   cout << endl;
   return 0;
 }
-

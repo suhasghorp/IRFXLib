@@ -19,7 +19,9 @@ double S_BS(double S0, double U, double D, int n, int i);
 int GetInputData(double &S0, double &U, double &D, double &R);
 
 // inputting, displaying and checking data
-int GetInputData2(ExerciseType& execType, OptionType& optionType, PayoffType& payoffType, double &S0, double &K, double &T, int &N, double &sigma, double &R);
+int GetInputData2(ExerciseType &execType, OptionType &optionType,
+                  PayoffType &payoffType, double &S0, double &K, double &K2,
+                  double &T, int &N, double &sigma, double &R);
 
 } // namespace lecture1
 

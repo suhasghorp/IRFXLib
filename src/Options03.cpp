@@ -1,11 +1,11 @@
 #include <IRFXLib/BinModel01.h>
 #include <IRFXLib/Options03.h>
-#include <math.h>
+#include <fstream>
 #include <iostream>
 #include <iterator>
-#include <fstream>
-#include <vector>
+#include <math.h>
 #include <spdlog/spdlog.h>
+#include <vector>
 
 using namespace std;
 
@@ -36,16 +36,20 @@ int GetInputData(int &N, double &K) {
 }
 
 // pricing European option
-Result PriceByCRR(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
+Result PriceByCRR(ExerciseType execType, OptionType optionType,
+                  PayoffType payoffType, double S0, double R, double sigma,
+                  int N, double T, double K,
+                  const std::function<double(double z, double K)> &Payoff) {
   double dt = T / N;
   double U = exp(sigma * sqrt(dt));
-  //D = 1/U
+  // D = 1/U
   double D = 1.0 / U;
   double q = RiskNeutProb(U, D, exp(R * dt));
   // double Price[N+1];
   vector<double> Value(N + 1);
   vector<vector<double>> Price(N + 1, vector<double>(N + 1));
-  double gamma = 0.0;double delta = 0.0;
+  double gamma = 0.0;
+  double delta = 0.0;
 
   for (int i = 0; i <= N; i++) {
     Price[N][i] = S(S0, U, D, N, i);
@@ -61,22 +65,22 @@ Result PriceByCRR(ExerciseType execType, OptionType optionType, PayoffType payof
         Value[i] = max(Value[i], earlyExerciseValue);
       }
     }
-    if (n == 2){
+    if (n == 2) {
       double delta1 = ((Value[2] - Value[1])) / (Price[2][2] - Price[2][1]);
       double delta2 = ((Value[1] - Value[0])) / (Price[2][1] - Price[2][0]);
-      gamma = (delta1 - delta2)/ (0.5 * (Price[2][2] - Price[2][0]));
-
+      gamma = (delta1 - delta2) / (0.5 * (Price[2][2] - Price[2][0]));
     }
 
-    if (n == 1){
+    if (n == 1) {
       delta = ((Value[1] - Value[0])) / (Price[1][1] - Price[1][0]);
     }
   }
 
-  struct Result result;
-  result.price = Value[0]; result.delta = delta; result.gamma = gamma;
+  struct Result result {};
+  result.price = Value[0];
+  result.delta = delta;
+  result.gamma = gamma;
   return result;
-
 }
 
 double FastBinomialCoeff(int i, int N) {
@@ -101,10 +105,13 @@ double NodeValue(int i, int N, double q) {
   // return BinomialCoeff(i, N) * pow(q, i) * pow(1.0 - q, (N - i));
 }
 
-double PriceByAnalytical(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
+double PriceByAnalytical(ExerciseType execType, OptionType optionType,
+                         PayoffType payoffType, double S0, double R,
+                         double sigma, int N, double T, double K,
+                         std::function<double(double z, double K)> Payoff) {
   double dt = T / N;
   double U = exp(sigma * sqrt(dt));
-  //D = 1/U
+  // D = 1/U
   double D = 1.0 / U;
   double q = RiskNeutProb(U, D, exp(R * dt));
   double total = 0.0;
@@ -117,7 +124,7 @@ double PriceByAnalytical(ExerciseType execType, OptionType optionType, PayoffTyp
     total += nv * Price;
   }
 
-  if (payoffType == PayoffType::Vanilla){
+  if (payoffType == PayoffType::Vanilla) {
     std::ofstream fout;
     fout.open("density_plot.csv");
     fout << "nodevalues\n";
@@ -129,10 +136,13 @@ double PriceByAnalytical(ExerciseType execType, OptionType optionType, PayoffTyp
   return total / exp(R * T);
 }
 
-double PriceByBS(ExerciseType execType, OptionType optionType, PayoffType payoffType, double S0, double R, double sigma, int N, double T, double K, std::function<double (double z, double K)> Payoff) {
+double PriceByBS(ExerciseType execType, OptionType optionType,
+                 PayoffType payoffType, double S0, double R, double sigma,
+                 int N, double T, double K,
+                 std::function<double(double z, double K)> Payoff) {
   double dt = T / N;
   double U = exp(((R - (pow(sigma, 2) / 2)) * dt) + (sigma * sqrt(dt))) - 1.0;
-  //D = 1/U
+  // D = 1/U
   double D = exp(((R - (pow(sigma, 2) / 2)) * dt) - (sigma * sqrt(dt))) - 1.0;
   double q = RiskNeutProbBS(U, D, exp(R * dt));
   vector<double> Value(N + 1);
@@ -157,7 +167,6 @@ double PriceByBS(ExerciseType execType, OptionType optionType, PayoffType payoff
   }
 
   return Value[0];
-
 }
 
 double CallPayoff(double z, double K) {

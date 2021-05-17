@@ -23,18 +23,22 @@ namespace lecture2 {
     double sigma;
     double dt;
 
-   public:
-
+  public:
     double RiskNeutProb(int N);
 
-    double S(int n, int i);
+    [[nodiscard]] double S(int n, int i) const;
 
     int GetInputData();
 
-    double GetR();
+    double GetR() const;
 
-    double getDt();
+    double GetS0() const;
 
+    double GetT() const;
+
+    double GetSigma() const;
+
+    double getDt() const;
   };
 }
 

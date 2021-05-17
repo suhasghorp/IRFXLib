@@ -10,7 +10,7 @@ enum class ExerciseType { American, European};
 
 enum class OptionType { Call, Put};
 
-enum PayoffType { Vanilla, Digital};
+enum PayoffType { Vanilla, Digital, DDigital };
 
 struct Result { double price; double delta; double gamma ;};
 
