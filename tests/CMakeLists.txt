@@ -1,7 +1,7 @@
 include_directories(../extern/catch2)
 include_directories(../extern)
 
-add_executable(test_Lecture1 test_Lecture1.cpp)
+add_executable(test_Lecture1 catch_config.cpp test_Lecture1.cpp)
 
 target_link_libraries(test_Lecture1 PRIVATE IRFXLib)
 

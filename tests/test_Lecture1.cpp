@@ -1,40 +1,50 @@
-#define CATCH_CONFIG_MAIN
 #include <IRFXLib/Options03.h>
-#include <IRFXLib/BinModel01.h>
 #include <catch.hpp>
+#include <iostream>
 #include <spdlog/spdlog.h>
-#include <math.h>
 
-/*TEST_CASE("European Call Option Price") {
+using namespace std;
+
+TEST_CASE("European Call Option Price") {
 
   SECTION("s0=100,k=100,T=1 year,N=100,sigma=20%,r=0.05") {
 
     double S0 = 100.0; // spot price, U, D, R;
-    double K = 100; // strike price
+    double K = 100;    // strike price
+    double K2 = 0.0;
     double sigma = 0.2;
-    //maturity in years
+    // maturity in years
     double T = 1.0;
-    //number of steps
+    // number of steps
     double N = 10000;
-    //dt
-    double dt = T/N;
+    // dt
+    double dt = T / N;
     double R = 0.05;
-    lecture1::OptionType optionType = lecture1::OptionType::European;
+    OptionType optionType = OptionType::Call;
+    struct Result result {};
 
-    double CRRPrice = lecture1::PriceByCRR(optionType, S0, R, sigma, N, T, K, lecture1::CallPayoff);
-    spdlog::info("European Call Option Price by CRR: {}", CRRPrice);
-    double AnalyticalPrice = lecture1::PriceByAnalytical(optionType, S0, R, sigma, N, T, K, lecture1::CallPayoff);
-    spdlog::info("European Call Option Price by Analytical: {}", AnalyticalPrice);
-    double BSPrice = lecture1::PriceByBS(optionType, S0, R, sigma, N, T, K, lecture1::CallPayoff);
-    spdlog::info("European Call Option Price by BS: {}", BSPrice); //10.460001667918041
+    result = lecture1::PriceByCRR(ExerciseType::European, optionType,
+                                  PayoffType::Vanilla, S0, R, sigma, N, T, K,
+                                  lecture1::CallPayoff);
+    spdlog::info("European Call Option Price by CRR: {}", result.price);
+    double AnalyticalPrice = lecture1::PriceByAnalytical(
+        ExerciseType::European, optionType, PayoffType::Vanilla, S0, R, sigma,
+        N, T, K, lecture1::CallPayoff);
+    spdlog::info("European Call Option Price by Analytical: {}",
+                 AnalyticalPrice);
+    double BSPrice = lecture1::PriceByBS(ExerciseType::European, optionType,
+                                         PayoffType::Vanilla, S0, R, sigma, N,
+                                         T, K, lecture1::CallPayoff);
+    spdlog::info("European Call Option Price by BS: {}",
+                 BSPrice); // 10.460001667918041
 
-    REQUIRE(CRRPrice == Approx(10.4306116622));
+    REQUIRE(result.price == Approx(10.4306116622));
 
-    REQUIRE(CRRPrice == Approx(AnalyticalPrice));
+    REQUIRE(result.price == Approx(AnalyticalPrice));
   }
 }
 
-TEST_CASE("European Put Option Price") {
+/*TEST_CASE("European Put Option Price") {
   SECTION("S0=100,K=100,N=100") {
     double S0 = 100.0; // spot price, U, D, R;
     double K = 100; // strike price
@@ -48,11 +58,11 @@ TEST_CASE("European Put Option Price") {
     double R = 0.05;
     lecture1::OptionType optionType = lecture1::OptionType::European;
 
-    double CRRPrice = lecture1::PriceByCRR(optionType, S0, R, sigma, N, T, K, lecture1::PutPayoff);
-    spdlog::info("European Put Option Price by CRR: {}", CRRPrice);
-    double AnalyticalPrice = lecture1::PriceByAnalytical(optionType, S0, R, sigma, N, T, K, lecture1::PutPayoff);
-    spdlog::info("European Put Option Price by Analytical: {}", AnalyticalPrice);
-    REQUIRE(CRRPrice == Approx(5.5535541123));
+    double CRRPrice = lecture1::PriceByCRR(optionType, S0, R, sigma, N, T, K,
+lecture1::PutPayoff); spdlog::info("European Put Option Price by CRR: {}",
+CRRPrice); double AnalyticalPrice = lecture1::PriceByAnalytical(optionType, S0,
+R, sigma, N, T, K, lecture1::PutPayoff); spdlog::info("European Put Option Price
+by Analytical: {}", AnalyticalPrice); REQUIRE(CRRPrice == Approx(5.5535541123));
 
     REQUIRE(CRRPrice == Approx(AnalyticalPrice));
   }
@@ -72,11 +82,12 @@ TEST_CASE("European Digital Call Option Price") {
     double R = 0.05;
     lecture1::OptionType optionType = lecture1::OptionType::European;
 
-    double CRRPrice = lecture1::PriceByCRR(optionType, S0, R, sigma, N, T, K, lecture1::DigitalCallPayoff);
-    spdlog::info("European Digital Call Option Price by CRR: {}", CRRPrice);
-    double AnalyticalPrice = lecture1::PriceByAnalytical(optionType, S0, R, sigma, N, T, K, lecture1::DigitalCallPayoff);
-    spdlog::info("European Digital Call Option Price by Analytical: {}", AnalyticalPrice);
-    REQUIRE(CRRPrice == Approx(0.5696358654));
+    double CRRPrice = lecture1::PriceByCRR(optionType, S0, R, sigma, N, T, K,
+lecture1::DigitalCallPayoff); spdlog::info("European Digital Call Option Price
+by CRR: {}", CRRPrice); double AnalyticalPrice =
+lecture1::PriceByAnalytical(optionType, S0, R, sigma, N, T, K,
+lecture1::DigitalCallPayoff); spdlog::info("European Digital Call Option Price
+by Analytical: {}", AnalyticalPrice); REQUIRE(CRRPrice == Approx(0.5696358654));
 
     REQUIRE(CRRPrice == Approx(AnalyticalPrice));
   }
@@ -97,11 +108,12 @@ TEST_CASE("European Digital Put Price") {
     lecture1::OptionType optionType = lecture1::OptionType::Call;
     lecture1::ExerciseType execType = lecture1::ExerciseType::European;
 
-    double CRRPrice = lecture1::PriceByCRR(execType, optionType,S0, R, sigma, N, T, K, lecture1::DigitalPutPayoff);
-    spdlog::info("European Digital Put Option Price by CRR: {}", CRRPrice);
-    double AnalyticalPrice = lecture1::PriceByAnalytical(optionType,S0, R, sigma, N, T, K, lecture1::DigitalPutPayoff);
-    spdlog::info("European Digital Put Option Price by Analytical: {}", AnalyticalPrice);
-    REQUIRE(CRRPrice == Approx(0.3815935590));
+    double CRRPrice = lecture1::PriceByCRR(execType, optionType,S0, R, sigma, N,
+T, K, lecture1::DigitalPutPayoff); spdlog::info("European Digital Put Option
+Price by CRR: {}", CRRPrice); double AnalyticalPrice =
+lecture1::PriceByAnalytical(optionType,S0, R, sigma, N, T, K,
+lecture1::DigitalPutPayoff); spdlog::info("European Digital Put Option Price by
+Analytical: {}", AnalyticalPrice); REQUIRE(CRRPrice == Approx(0.3815935590));
     REQUIRE(CRRPrice == Approx(AnalyticalPrice));
   }
 }*/

@@ -16,19 +16,17 @@ namespace lecture2 {
     void SetN(int N_) { N = N_; }
     virtual double Payoff (double z) { return 0.0;}
     double PriceByCRR(BinModel Model);
-    int GetN() { return N; }
+    int GetN() const { return N; }
   };
 
-
-//double CallPayoff(double z, double K);
 
 class Call : public EurOption { ;
  private:
   double K;
  public:
   void SetK ( double K_ ) {K=K_;}
-  int GetInputData ( ) ;
-  virtual double Payoff ( double z ) ;
+  int GetInputData();
+  double Payoff(double z) override;
 };
 
 class Put: public EurOption {
@@ -36,19 +34,17 @@ class Put: public EurOption {
     double K;
    public:
     void SetK ( double K_ ) {K=K_;}
-    int GetInputData ( ) ;
-    virtual double Payoff ( double z ) ;
-  };
+    int GetInputData();
+    double Payoff(double z) override;
+};
 
   class DoubleDigital : public EurOption {
-    ;
-
   private:
     double K1, K2;
 
   public:
     int GetInputData();
-    virtual double Payoff(double z);
+    double Payoff(double z) override;
     double GetK1() const;
     double GetK2() const;
   };
