@@ -107,7 +107,7 @@ Result PriceByQuantLib(ExerciseType execType, OptionType optionType,
     }
   }
 
-  struct Result result;
+  struct Result result {};
   result.price = option.NPV();
   result.delta = option.delta();
   result.gamma = option.gamma();

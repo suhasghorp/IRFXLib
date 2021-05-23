@@ -4,3 +4,6 @@ target_link_libraries(lecture1 PRIVATE IRFXLib QuantLib)
 
 add_executable(lecture2 lecture2.cpp ql.h ql.cpp)
 target_link_libraries(lecture2 PRIVATE IRFXLib QuantLib)
+
+add_executable(lecture3 lecture3.cpp ql.h ql.cpp)
+target_link_libraries(lecture3 PRIVATE IRFXLib QuantLib)

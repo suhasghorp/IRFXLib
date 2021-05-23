@@ -6,9 +6,8 @@
 using namespace std;
 using namespace lecture2;
 
-double EurOption::PriceByCRR(BinModel Model) {
-
-  double q = Model.RiskNeutProb(N);
+double EurOption::PriceByCRR(const BinModel &Model) {
+  const double q = Model.RiskNeutProb();
   double Price[N + 1];
   for (int i = 0; i <= N; i++) {
     Price[i] = Payoff(Model.S(N, i));
@@ -29,16 +28,14 @@ double Call::Payoff(double z) {
 }
 
 int Call::GetInputData() {
-  cout << " Enter Call Option data : " << endl;
-  int N;
-  cout << " Enter Steps to Expiry N: ";
-  cin >> N;
-  SetN(N);
-  cout << " Enter Strike Price K: ";
+  cout << "Enter Call Option data : " << endl;
+  cout << "Enter Strike Price K: ";
   cin >> K;
   cout << endl;
   return 0;
 }
+
+double Call::GetK() const { return K; }
 
 double Put::Payoff(double z) {
   if (z < K)
@@ -47,16 +44,30 @@ double Put::Payoff(double z) {
 }
 
 int Put::GetInputData() {
-  cout << " Enter Put Option data : " << endl;
-  int N;
-  cout << " Enter Steps to Expiry N: ";
-  cin >> N;
-  SetN(N);
-  cout << " Enter Strike Price K: ";
+  cout << "Enter Put Option data : " << endl;
+  cout << "Enter Strike Price K: ";
   cin >> K;
   cout << endl;
   return 0;
 }
+
+double Put::GetK() const { return K; }
+
+double Digital::Payoff(double z) {
+  if (z > K)
+    return 1.0;
+  return 0.0;
+}
+
+int Digital::GetInputData() {
+  cout << "Enter Digital Option data : " << endl;
+  cout << "Enter Strike Price K: ";
+  cin >> K;
+  cout << endl;
+  return 0;
+}
+
+double Digital::GetK() const { return K; }
 
 double DoubleDigital::Payoff(double z) {
   if (K1 <= z && z <= K2)
@@ -68,14 +79,10 @@ double DoubleDigital::GetK1() const { return K1; }
 double DoubleDigital::GetK2() const { return K2; }
 
 int DoubleDigital::GetInputData() {
-  cout << " Enter Double Digital Option data : " << endl;
-  int N;
-  cout << " Enter Steps to Expiry N: ";
-  cin >> N;
-  SetN(N);
-  cout << " Enter First Strike Price K1: ";
+  cout << "Enter Double Digital Option data : " << endl;
+  cout << "Enter First Strike Price K1: ";
   cin >> K1;
-  cout << " Enter Second Strike Price K2: ";
+  cout << "Enter Second Strike Price K2: ";
   cin >> K2;
   cout << endl;
   return 0;

@@ -4,6 +4,7 @@
 
 #include "IRFXLib/BinModel02.h"
 
+#include <cassert>
 #include <cmath>
 #include <iostream>
 
@@ -11,21 +12,9 @@ using namespace std;
 
 namespace lecture2 {
 
-double BinModel::RiskNeutProb(int N) {
-
-  dt = T / N;
-  U = exp(sigma * sqrt(dt));
-  D = 1.0 / U;
-  return (exp(R * dt) - D) / (U - D);
-}
-
-double BinModel::S(int n, int i) const {
-  // return S0 * pow(1+U, i ) * pow(1+D, n - i ) ;
-  return S0 * pow(U, i) * pow(D, n - i);
-}
-
-int BinModel::GetInputData() {
-
+BinModel GetInputData() {
+  double S0{}, sigma{}, R{};
+  int T{}, N{};
   cout << "Enter Spot: ";
   cin >> S0;
   cout << "Enter Time to Maturity in years: ";
@@ -34,14 +23,33 @@ int BinModel::GetInputData() {
   cin >> sigma;
   cout << "Enter Interest Rate (e.g. 0.05): ";
   cin >> R;
+  cout << "Enter Steps to Expiry N: ";
+  cin >> N;
   cout << endl;
 
-  if (S0 <= 0.0 || U <= -1.0 || D <= -1.0 || U <= D || R <= -1.0) {
-    cout << "Illegal Data Ranges, Terminating program" << endl;
-    return 1;
-  }
+  BinModel binModel(S0, R, T, sigma, N);
 
-  return 0;
+  return binModel;
+}
+
+BinModel::BinModel(double s_0, double r, double t, double sigma, int n)
+    : S0(s_0), R(r), T(t), sigma(sigma), N(n) {
+
+  dt = T / N;
+  U = exp(sigma * sqrt(dt));
+  D = 1.0 / U;
+
+  assert((S0 > 0.0 && U > -1.0 && D > -1.0 && D <= U && R >= -1.0) &&
+         "Illegal Data Ranges,Terminating");
+}
+
+const double BinModel::RiskNeutProb() const {
+  return (exp(R * dt) - D) / (U - D);
+}
+
+double BinModel::S(int n, int i) const {
+  // return S0 * pow(1+U, i ) * pow(1+D, n - i ) ;
+  return S0 * pow(U, i) * pow(D, n - i);
 }
 
 double BinModel::GetR() const { return R; }
@@ -50,7 +58,10 @@ double BinModel::GetS0() const { return S0; }
 
 double BinModel::GetT() const { return T; }
 
+int BinModel::GetN() const { return N; }
+
 double BinModel::GetSigma() const { return sigma; }
 
 double BinModel::getDt() const { return dt; }
+
 } // namespace lecture2

@@ -1,7 +1,6 @@
 #include "ql.h"
 #include <IRFXLib/BinModel02.h>
 #include <IRFXLib/Option06.h>
-#include <IRFXLib/Options04.h>
 #include <cmath>
 #include <iostream>
 
@@ -10,45 +9,55 @@ using namespace lecture2;
 
 int main() {
 
-  BinModel Model;
-  if (Model.GetInputData() == 1)
-    return 1;
+  BinModel Model = GetInputData();
 
-  /*Call Option1 ;
+  Call Option1(Model.GetN());
   Option1.GetInputData();
-  cout << " European Call Option Price = " << Option1.PriceByCRR ( Model)  <<
-  endl << endl;
+  cout << "European Call Option Price = "
+       << Option1.PriceByCRR(std::move(Model)) << endl;
 
-  Put Option2 ;
-  Option2.GetInputData ( ) ;
-  cout << " European Put Option Price = " << Option2.PriceByCRR ( Model) << endl
-  << endl;*/
+  auto qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Call,
+                                 PayoffType::Vanilla, Model.GetS0(),
+                                 Model.GetR(), Model.GetSigma(), Option1.GetN(),
+                                 Model.GetT(), Option1.GetK(), 0.0);
+  cout << "European Call Option Price by QuantLib = " << qlPrice.price << endl
+       << endl;
 
-  DoubleDigital Option3;
+  Put Option2(Model.GetN());
+  Option2.GetInputData();
+  cout << "European Put Option Price = " << Option2.PriceByCRR(std::move(Model))
+       << endl;
+
+  qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Put,
+                            PayoffType::Vanilla, Model.GetS0(), Model.GetR(),
+                            Model.GetSigma(), Option1.GetN(), Model.GetT(),
+                            Option1.GetK(), 0.0);
+  cout << "European Put Option Price by QuantLib = " << qlPrice.price << endl
+       << endl;
+
+  lecture2::Digital Option4(Model.GetN());
+  Option4.GetInputData();
+  cout << "Digital Option Price by CRR = "
+       << Option4.PriceByCRR(std::move(Model)) << endl;
+
+  qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Call,
+                            PayoffType::Digital, Model.GetS0(), Model.GetR(),
+                            Model.GetSigma(), Option4.GetN(), Model.GetT(),
+                            Option4.GetK(), 0.0);
+  cout << "Digital Option Price by QuantLib = " << qlPrice.price << endl
+       << endl;
+
+  DoubleDigital Option3(Model.GetN());
   Option3.GetInputData();
-  cout << " Double Digital Option Price by CRR = " << Option3.PriceByCRR(Model)
-       << endl
+  cout << "Double Digital Option Price by CRR = "
+       << Option3.PriceByCRR(std::move(Model)) << endl;
+
+  qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Call,
+                            PayoffType::DDigital, Model.GetS0(), Model.GetR(),
+                            Model.GetSigma(), Option3.GetN(), Model.GetT(),
+                            Option3.GetK1(), Option3.GetK2());
+  cout << "Double Digital Option Price by QuantLib = " << qlPrice.price << endl
        << endl;
 
-  auto qlPrice = PriceByQuantLib(
-      ExerciseType::European, OptionType::Call, PayoffType::DDigital,
-      Model.GetS0(), Model.GetR(), Model.GetSigma(), Option3.GetN(),
-      Model.GetT(), Option3.GetK1(), Option3.GetK2());
-  cout << " Double Digital Option Price by QuantLib = " << qlPrice.price << endl
-       << endl;
   return 0;
-
-  /*BinModel Model;
-
-  if (Model.GetInputData() == 1) return 1;
-  double K;
-  int N;
-  cout << " Enter Call Option data : " << endl;
-
-  GetInputData(N, K);
-  cout << " European Call Option Price = " << PriceByCRR(Model, N, K,
-  CallPayoff) << endl << endl; cout << " Enter Put Option Data : " << endl;
-  GetInputData(N, K);
-  cout << " European Put Option Price = " << PriceByCRR(Model, N, K, PutPayoff)
-  << endl << endl; return 0;*/
 }

@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.16)
 
 #use the below command to sync clocks
-#ntpdate time.windows.com
+#sudo ntpdate time.windows.com
 
 project(IRFXLib
         VERSION 0.1.0
@@ -19,7 +19,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED YES)
 #uncomment below to use address sanitizers
 #set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g -O1 -fno-omit-frame-pointer")
 # Add sanitizer flags for C++ compiler for "Debug" configuration
-set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1")
+#set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fsanitize=address,undefined -fno-optimize-sibling-calls -fsanitize-address-use-after-scope -fno-omit-frame-pointer -g -O1")
 
 
 ## Add external dependencies here, e.g.:

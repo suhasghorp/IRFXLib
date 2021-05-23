@@ -22,13 +22,20 @@ namespace lecture2 {
     double T;
     double sigma;
     double dt;
+    int N;
 
   public:
-    double RiskNeutProb(int N);
+    BinModel() = default;
+    BinModel(double s_0, double r, double t, double sigma, int n);
+    BinModel &operator=(const BinModel &) = default;
+    BinModel(const BinModel &) = default;
+    BinModel(BinModel &&) noexcept = default;
+    BinModel &operator=(BinModel &&) noexcept = default;
+    virtual ~BinModel() = default;
+
+    const double RiskNeutProb() const;
 
     [[nodiscard]] double S(int n, int i) const;
-
-    int GetInputData();
 
     double GetR() const;
 
@@ -36,10 +43,15 @@ namespace lecture2 {
 
     double GetT() const;
 
+    int GetN() const;
+
     double GetSigma() const;
 
     double getDt() const;
   };
-}
+
+  BinModel GetInputData();
+
+  } // namespace lecture2
 
 #endif //IRFXLIB_SRC_BINMODEL02_H_
