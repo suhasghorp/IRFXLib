@@ -32,8 +32,8 @@ int main() {
          << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
          << endl;
 
-    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N,
-                             T, K, K2);
+    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, 0.0,
+                             sigma, N, T, K, K2);
     cout << exec_type << " " << option_type
          << " option price by QuantLib = " << result.price << " delta "
          << result.delta << " gamma " << result.gamma << endl
@@ -58,8 +58,8 @@ int main() {
          << result.price << " delta " << result.delta << " gamma " << result.gamma << endl
          << endl;
 
-    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, sigma, N,
-                             T, K, K2);
+    result = PriceByQuantLib(execType, optionType, payoffType, S0, R, 0.0,
+                             sigma, N, T, K, K2);
     cout << exec_type << " Digital " << option_type
          << " option price by QuantLib = " << result.price << " delta "
          << result.delta << " gamma " << result.gamma << endl

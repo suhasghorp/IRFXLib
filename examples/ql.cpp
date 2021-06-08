@@ -17,8 +17,8 @@ using namespace QuantLib;
 using namespace lecture1;
 
 Result PriceByQuantLib(ExerciseType execType, OptionType optionType,
-                       PayoffType payoffType, double S0, double R, double sigma,
-                       int N, double T, double K1, double K2) {
+                       PayoffType payoffType, double S0, double R, double Q,
+                       double sigma, int N, double T, double K1, double K2) {
 
   Calendar calendar = UnitedStates();
   Date today = Date::todaysDate();
@@ -31,11 +31,13 @@ Result PriceByQuantLib(ExerciseType execType, OptionType optionType,
   Real underlying = S0;
   Real strike = K1;
   Real secondStrike = K2;
-  Spread dividendYield = 0.00;
+  Spread dividendYield = Q;
   Rate riskFreeRate = R;
   Size timeSteps = N;
   Volatility volatility = sigma;
-  Date maturity = calendar.advance(today, T, Years);
+  // Date maturity = calendar.advance(today, T, Years);
+  Date maturity = calendar.advance(today, Period(6, Months));
+  // Date maturity = today + ( T * Years);
   DayCounter dayCounter = Actual365Fixed();
 
   ext::shared_ptr<Exercise> exercise;

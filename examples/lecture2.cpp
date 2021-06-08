@@ -16,10 +16,10 @@ int main() {
   cout << "European Call Option Price = "
        << Option1.PriceByCRR(std::move(Model)) << endl;
 
-  auto qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Call,
-                                 PayoffType::Vanilla, Model.GetS0(),
-                                 Model.GetR(), Model.GetSigma(), Option1.GetN(),
-                                 Model.GetT(), Option1.GetK(), 0.0);
+  auto qlPrice = PriceByQuantLib(
+      ExerciseType::European, OptionType::Call, PayoffType::Vanilla,
+      Model.GetS0(), Model.GetR(), 0.0, Model.GetSigma(), Option1.GetN(),
+      Model.GetT(), Option1.GetK(), 0.0);
   cout << "European Call Option Price by QuantLib = " << qlPrice.price << endl
        << endl;
 
@@ -30,7 +30,7 @@ int main() {
 
   qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Put,
                             PayoffType::Vanilla, Model.GetS0(), Model.GetR(),
-                            Model.GetSigma(), Option1.GetN(), Model.GetT(),
+                            0.0, Model.GetSigma(), Option1.GetN(), Model.GetT(),
                             Option1.GetK(), 0.0);
   cout << "European Put Option Price by QuantLib = " << qlPrice.price << endl
        << endl;
@@ -42,7 +42,7 @@ int main() {
 
   qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Call,
                             PayoffType::Digital, Model.GetS0(), Model.GetR(),
-                            Model.GetSigma(), Option4.GetN(), Model.GetT(),
+                            0.0, Model.GetSigma(), Option4.GetN(), Model.GetT(),
                             Option4.GetK(), 0.0);
   cout << "Digital Option Price by QuantLib = " << qlPrice.price << endl
        << endl;
@@ -54,7 +54,7 @@ int main() {
 
   qlPrice = PriceByQuantLib(ExerciseType::European, OptionType::Call,
                             PayoffType::DDigital, Model.GetS0(), Model.GetR(),
-                            Model.GetSigma(), Option3.GetN(), Model.GetT(),
+                            0.0, Model.GetSigma(), Option3.GetN(), Model.GetT(),
                             Option3.GetK1(), Option3.GetK2());
   cout << "Double Digital Option Price by QuantLib = " << qlPrice.price << endl
        << endl;

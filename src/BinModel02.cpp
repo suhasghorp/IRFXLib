@@ -13,8 +13,8 @@ using namespace std;
 namespace lecture2 {
 
 BinModel GetInputData() {
-  double S0{}, sigma{}, R{};
-  int T{}, N{};
+  double S0{}, sigma{}, R{}, T{}, Q{};
+  int N{};
   cout << "Enter Spot: ";
   cin >> S0;
   cout << "Enter Time to Maturity in years: ";
@@ -23,17 +23,20 @@ BinModel GetInputData() {
   cin >> sigma;
   cout << "Enter Interest Rate (e.g. 0.05): ";
   cin >> R;
+  cout << "Enter cost of carry (e.g. 0.01): ";
+  cin >> Q;
   cout << "Enter Steps to Expiry N: ";
   cin >> N;
   cout << endl;
 
-  BinModel binModel(S0, R, T, sigma, N);
+  BinModel binModel(S0, R, Q, T, sigma, N);
 
   return binModel;
 }
 
-BinModel::BinModel(double s_0, double r, double t, double sigma, int n)
-    : S0(s_0), R(r), T(t), sigma(sigma), N(n) {
+BinModel::BinModel(double s_0, double r, double q, double t, double sigma,
+                   int n)
+    : S0(s_0), R(r), Q(q), T(t), sigma(sigma), N(n) {
 
   dt = T / N;
   U = exp(sigma * sqrt(dt));
@@ -44,7 +47,7 @@ BinModel::BinModel(double s_0, double r, double t, double sigma, int n)
 }
 
 const double BinModel::RiskNeutProb() const {
-  return (exp(R * dt) - D) / (U - D);
+  return (exp((R - Q) * dt) - D) / (U - D);
 }
 
 double BinModel::S(int n, int i) const {
@@ -53,6 +56,8 @@ double BinModel::S(int n, int i) const {
 }
 
 double BinModel::GetR() const { return R; }
+
+double BinModel::GetQ() const { return Q; }
 
 double BinModel::GetS0() const { return S0; }
 

@@ -2,7 +2,8 @@
 file(GLOB HEADERS CONFIGURE_DEPENDS "${PROJECT_SOURCE_DIR}/include/IRFXLib/*.h")
 
 # Make a static library (tradeoff of memory for better performance)
-add_library(IRFXLib STATIC "BinModel01.cpp" Options03.cpp "BinModel02.cpp" Option06.cpp DoubleDigitalPayoff.cpp Options09.cpp ${HEADERS})
+add_library(IRFXLib STATIC "BinModel01.cpp" Options03.cpp "BinModel02.cpp" Option06.cpp DoubleDigitalPayoff.cpp Options09.cpp BSModel01.cpp
+        EurCall.cpp GmtrAsianCall.cpp matrix.cpp BSModel02.cpp PathDependentOption05.cpp CVEurBasketCall.cpp BSModelEigen.cpp ${HEADERS})
 
 # Add an alias so the target can be used while building
 add_library(IRFXLib::IRFXLib ALIAS IRFXLib)
@@ -20,13 +21,14 @@ find_package(Threads REQUIRED)
 #sudo apt install libtbb-dev
 find_package(TBB REQUIRED tbb)
 
-find_package(Boost COMPONENTS system REQUIRED)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)
 
+find_package(Boost COMPONENTS system REQUIRED)
 include_directories(${Boost_INCLUDE_DIRS})
 
 include_directories(../extern)
 
-target_link_libraries(IRFXLib ${CMAKE_THREAD_LIBS_INIT} ${TBB_IMPORTED_TARGETS} ${Boost_LIBRARIES})
+target_link_libraries(IRFXLib ${CMAKE_THREAD_LIBS_INIT} ${TBB_IMPORTED_TARGETS} ${Boost_LIBRARIES} Eigen3::Eigen)
 
 add_compile_options(-Wall -Wextra -Wpedantic -Werror)
 

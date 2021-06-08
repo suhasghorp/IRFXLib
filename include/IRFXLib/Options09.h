@@ -40,11 +40,11 @@ private:
   double K;
 
 public:
-  explicit Call(int n) : EurOption(n), AmOption(n), Option(n) {}
+  explicit Call(int n) : EurOption(n), AmOption(n), Option(n) { K = 0.0; }
   void SetK(int K_) { K = K_; }
   int GetInputData();
-  double PayOff(double z);
-  double GetK() { return K; }
+  double PayOff(double z) override;
+  double GetK() const { return K; }
 };
 
 class Put : public EurOption, public AmOption {
@@ -55,7 +55,7 @@ public:
   explicit Put(int n) : EurOption(n), AmOption(n), Option(n) {}
   void SetK(int K_) { K = K_; }
   int GetInputData();
-  double PayOff(double z);
+  double PayOff(double z) override;
   double GetK() { return K; }
 };
 

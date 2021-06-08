@@ -19,6 +19,7 @@ namespace lecture2 {
     double U;
     double D;
     double R;
+    double Q;
     double T;
     double sigma;
     double dt;
@@ -26,7 +27,7 @@ namespace lecture2 {
 
   public:
     BinModel() = default;
-    BinModel(double s_0, double r, double t, double sigma, int n);
+    BinModel(double s_0, double r, double q, double t, double sigma, int n);
     BinModel &operator=(const BinModel &) = default;
     BinModel(const BinModel &) = default;
     BinModel(BinModel &&) noexcept = default;
@@ -44,6 +45,8 @@ namespace lecture2 {
     double GetT() const;
 
     int GetN() const;
+
+    double GetQ() const;
 
     double GetSigma() const;
 
