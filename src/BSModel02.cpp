@@ -29,8 +29,6 @@ void BSModel::GenerateSamplePath(double T, int m, SamplePath &S) {
   int d = S0.size();
 
   for (int k = 1; k < m; k++) {
-    // S[k] = St * exp(((T / m) * (r + (-0.5) * sigma * sigma)) + (sqrt(T / m) *
-    // (C * Gauss(d))));
     S[k] = St * exp(((T / m) * (r + (-0.5) * sigma * sigma)) +
                     (sqrt(T / m) * (C * Gauss(d))));
     St = S[k];

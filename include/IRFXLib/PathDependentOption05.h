@@ -9,10 +9,10 @@
 #include <IRFXLib/BSModelEigen.h>
 class PathDepOption {
 public:
-  double T, Price, PricingError, delta;
-  int m;
+  double T{0.0}, Price{0.0}, PricingError{0.0}, delta{0.0};
+  int m{0};
   double PriceByMC(BSModel &Model, long N);
-  double PriceByMCEigen(BSModelEigen &Model, long N);
+  virtual double PriceByMCEigen(BSModelEigen &&Model, long N);
   double PriceByVarRedMC(BSModel &Model, long N, PathDepOption &CVOption);
   virtual double PriceByBSFormula(BSModel Model) { return 0.0; };
   virtual double Payoff(SamplePath &S) = 0;
@@ -31,7 +31,9 @@ public:
     Ptr1 = Ptr1_;
     Ptr2 = Ptr2_;
   }
-  double Payoff(SamplePath &S) { return Ptr1->Payoff(S) - Ptr2->Payoff(S); }
+  double Payoff(SamplePath &S) override {
+    return Ptr1->Payoff(S) - Ptr2->Payoff(S);
+  }
   double PayoffEigen(MatrixXd &&S) override { return 0.0; }
 };
 

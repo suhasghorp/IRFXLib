@@ -10,7 +10,7 @@ using std::chrono::duration_cast;
 using std::chrono::high_resolution_clock;
 using std::chrono::milliseconds;
 
-double PathDepOption::PriceByMCEigen(BSModelEigen &Model, long N) {
+double PathDepOption::PriceByMCEigen(BSModelEigen &&Model, long N) {
   double H = 0.0, Hsq = 0.0;
   // pre-compute all the sample paths in parallel
   auto t1 = high_resolution_clock::now();
@@ -18,7 +18,7 @@ double PathDepOption::PriceByMCEigen(BSModelEigen &Model, long N) {
   std::vector<MatrixXd> SVec(N);
   std::iota(std::begin(v), std::end(v), 0);
   std::transform(std::execution::par, v.begin(), v.end(), SVec.begin(),
-                 [&](auto x) { return Model.GenerateSamplePath(T, m); });
+                 [&](int x) { return Model.GenerateSamplePath(T, m); });
 
   for (long i = 0; i < v.size(); i++) {
     double payoff = PayoffEigen(std::move(SVec[i]));
@@ -27,7 +27,7 @@ double PathDepOption::PriceByMCEigen(BSModelEigen &Model, long N) {
   }
   auto t2 = high_resolution_clock::now();
   auto ms_int = duration_cast<milliseconds>(t2 - t1);
-  std::cout << "(PriceByMC took: " << ms_int.count() << "ms) ";
+  std::cout << "(PriceByMCEigen took: " << ms_int.count() << "ms) ";
   Price = exp(-Model.r * T) * H;
   PricingError = exp(-Model.r * T) * sqrt(Hsq - H * H) / sqrt(N - 1.0);
 

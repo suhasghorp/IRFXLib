@@ -40,10 +40,10 @@ int main() {
   cout << " Arithmetic Basket Call Price = " << Option.PriceByMC(Model, N)
        << endl;
 
-  BSModelEigen ModelEigen(S0Eigen, r, CEigen);
+  BSModelEigen ModelEigen(std::move(S0Eigen), r, std::move(CEigen));
   ArithmAsianCall OptionEigen(T, K, m);
   cout << " Arithmetic Basket Call Price using Eigen = "
-       << OptionEigen.PriceByMCEigen(ModelEigen, N) << endl;
+       << OptionEigen.PriceByMCEigen(std::move(ModelEigen), N) << endl;
 
   EurBasketCall EurBasketOption(T, K, m);
   CVEurBasketCall CVOption(T, K, m);
